@@ -63,5 +63,25 @@ class Clima_Actual:
             return "Lluvia"
         else:
             return "Variable/Desconocido"
-
-
+class RegistroHistorico:
+    def __init__ (self, la_localidad, las_fechas, las_temperaturas, las_humedades, las_precipitaciones, los_vientos):
+        self.localidad = la_localidad
+        self.fechas = las_fechas
+        self.temperaturas = las_temperaturas
+        self.humedades = las_humedades
+        self.precipitaciones = las_precipitaciones
+        self.vientos = los_vientos
+    def __str__(self):
+        return "f Historico de {self.localidad.nombre} ({len(self.fechas)} registros guardados)"
+class SistemaMeteo:
+    def __init__(self, la_ruta_json):
+        self.ruta_json = la_ruta_json
+        self.municipios = []
+        self.consultas = []
+    def __str__(self):
+        return f"Sistema MeteoCaracas: {len(self.municiios)} municipios"
+    def agregar_municipio (self, el_municipio):
+        self.municipios.append(el_municipio)
+    def guardar_consulta(self, la_consulta_clima):
+        self.consultas.append(la_consulta_clima)
+        
