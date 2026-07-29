@@ -84,4 +84,3 @@ class SistemaMeteo:
         self.municipios.append(el_municipio)
     def guardar_consulta(self, la_consulta_clima):
         self.consultas.append(la_consulta_clima)
-        
