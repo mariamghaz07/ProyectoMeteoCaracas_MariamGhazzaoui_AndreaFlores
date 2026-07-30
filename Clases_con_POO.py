@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 import requests
 #Estos son los archicos que vamos a necesitar para las ultimas 2 clases
 
+#URL'S de la API Open-Meteo
+
+URL_REAL = "https://api.open-meteo.com/v1/forecast" #API para datos en tiempo real
+URL_HISTORICO = "https://archive-api.open-meteo.com/v1/archive" #API para datos historicos
+
 class Localidad:
     #Creamos la primera clase que es la localidad, en donde se mostrara el area geografica del area metropolitano
     def __init__(self, el_nombre, la_latitud=None, la_longitud=None):
@@ -41,7 +46,7 @@ class Municipio:
 
 class Clima_Actual:
 #Aqui tenemos la clase en donde nos mostraran el clima de cada localidad
-    def __init_(self, la_localidad, la_temperatura, la_humedad, la_velocidad_viento, el_codigo_tiempo):
+    def __init__(self, la_localidad, la_temperatura, la_humedad, la_velocidad_viento, el_codigo_tiempo):
         self.localidad = la_localidad
         self.temperatura = la_temperatura
         self.humedad = la_humedad
@@ -79,8 +84,21 @@ class SistemaMeteo:
         self.municipios = []
         self.consultas = []
     def __str__(self):
-        return f"Sistema MeteoCaracas: {len(self.municiios)} municipios"
+        return f"Sistema MeteoCaracas: {len(self.municipios)} municipios"
     def agregar_municipio (self, el_municipio):
         self.municipios.append(el_municipio)
     def guardar_consulta(self, la_consulta_clima):
         self.consultas.append(la_consulta_clima)
+    def cargar_datos(self):
+        #Cargamos el archivo de localidades 
+        with open(self.ruta_json, encoding="utf-8") as info:
+            datos_json = json.load(info)
+        """Se le especifica a la lectura del archivo json la codificacion "utf-8" para evitar conflictos
+        de lectura con caracteres especiales como acentos u "ñ" """
+        for datos_municipio in datos_json:
+            mun_nuevo = Municipio(datos_municipio)
+            localidades_lista = datos_json[datos_municipio]
+            for loc in localidades_lista:
+                loc_nueva = Localidad(loc["localidad"], loc["latitud"], loc["longitud"])
+                mun_nuevo.agregar_localidad(loc_nueva)
+            self.municipios.append(mun_nuevo)
