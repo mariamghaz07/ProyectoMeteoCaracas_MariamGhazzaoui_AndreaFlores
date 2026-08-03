@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 
 
 def calcular_promedio_temperatura(registro_historico):
-    if not registro_historico.temperatura:
+    if not registro_historico.temperaturas:
         return 0.0
-    return sum(registro_historico.temperaturas) / len(registro_historico.temperatura)
+    return sum(registro_historico.temperaturas) / len(registro_historico.temperaturas)
 
 def obtener_extremos_historicos(registro_historico):
     if not registro_historico.fechas:
