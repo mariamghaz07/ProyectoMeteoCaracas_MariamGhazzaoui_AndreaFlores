@@ -35,11 +35,11 @@ class Municipio:
         localidades_sin_coordenadas = localidades_totales - localidades_coordenadas
 
         if localidades_totales > 0:
-            porcentaje_localidades_coordenadas = (localidades_coordenadas / localidades_totales) * 100
+            porcentaje_localidades_coordenadas = round(((localidades_coordenadas / localidades_totales) * 100), 2)
         else:
             porcentaje_localidades_coordenadas = 0
         #para mostrarlo en pantalla
-        print(f"Para el municipio {self.nombre}, se han cargado {localidades_totales} localidades.\n {localidades_coordenadas} tienen coordenadas y {localidades_sin_coordenadas} no tienen\nPorcentaje: {porcentaje_localidades_coordenadas}%")
+        print(f"Para el municipio {self.nombre}, se han cargado {localidades_totales} localidades.\n{localidades_coordenadas} tienen coordenadas y {localidades_sin_coordenadas} no tienen\nPorcentaje: {porcentaje_localidades_coordenadas}%")
 
 
     def seleccionar_localidad(self):
@@ -63,7 +63,7 @@ class Municipio:
                     opcion = int(opcion)
                     #Comprueba y devuelve el municipio elegido
                     if opcion > len(localidades_validas) or opcion <= 0:
-                        print("Selecciona una localidad dentro del rango, por favor usa numeros.")
+                        print("Selecciona una localidad dentro del rango.")
                     else: 
                         seguir = False
                         return localidades_validas[opcion - 1]

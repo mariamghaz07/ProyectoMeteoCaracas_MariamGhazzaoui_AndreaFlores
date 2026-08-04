@@ -7,6 +7,7 @@ import json
 import matplotlib.pyplot as plt
 import requests
 import estadisticas
+import pandas as pd
 
 URL_REAL = "https://api.open-meteo.com/v1/forecast" #API para datos en tiempo real
 URL_HISTORICO = "https://archive-api.open-meteo.com/v1/archive" #API para datos historicos
@@ -83,19 +84,19 @@ class SistemaMeteo:
         "latitude": localidad.latitud,
         "longitude": localidad.longitud,
         "current": ["temperature_2m", "relative_humidity_2m", "wind_speed_10m", "weather_code"]
-    }
+        }
     
-    #esto accede a internet y busca la informacion que necesitamos consultar en la longitud y latitud del objeto Localidad que le estamos pasando
+        #esto accede a internet y busca la informacion que necesitamos consultar en la longitud y latitud del objeto Localidad que le estamos pasando
         respuesta = requests.get(URL_REAL, params=informacion_api) 
-    #esto accede a la temperatura, humedad, velocidad de =l viento, etc... Esta en forma de diccionario que asignamos a "clima"
+        #esto accede a la temperatura, humedad, velocidad de =l viento, etc... Esta en forma de diccionario que asignamos a "clima"
         clima = respuesta.json()["current"] 
-    #accedemos a cada uno de los parametros y se los asignamos a una variable
+        #accedemos a cada uno de los parametros y se los asignamos a una variable
         temperatura = clima["temperature_2m"]
         humedad = clima["relative_humidity_2m"]
         velocidad_viento= clima["wind_speed_10m"]
         codigo_clima = clima["weather_code"]
     
-    #creamos el objeto de tipo Clima_Actual
+        #creamos el objeto de tipo Clima_Actual
         clima_nuevo = Clima_Actual(localidad, temperatura, humedad, velocidad_viento, codigo_clima)
 
         self.guardar_consulta(clima_nuevo)
@@ -125,4 +126,62 @@ class SistemaMeteo:
         velocidad_viento = clima_historico["wind_speed_10m_max"]
 
         return RegistroHistorico(localidad, fechas, temperatura, humedad, precipitacion, velocidad_viento)
+
+
+    def validar_fecha(self, fecha):
+        #primero validamos que el formato sea el correcto
+        lista_fecha = fecha.split("-")
+
+        if len(lista_fecha) != 3:
+            print("Recuerda utilizar '-' para separar, el formato es (AAAA-MM-DD) (anio, mes, dia). Intenta otra vez")
+            return False
+
+        elif len(lista_fecha) == 3:
+            anio = lista_fecha[0] 
+            mes = lista_fecha[1] 
+            dia = lista_fecha[2] 
+            
+            if anio.isdigit() == True and mes.isdigit() == True and dia.isdigit() == True:
+                
+                if len(anio) == 4 and len(mes) == 2 and len(dia) == 2:
+                    #validamos que la fecha exista, #errors = "coerce" nos devuelve un dato nulo si la fecha no existe
+                    fecha_pd = pd.to_datetime(fecha, errors= "coerce")
+                    if pd.isna(fecha_pd) == True:
+                        print("La fecha que ingresaste no existe. Prueba otra vez.")
+                        return False 
+                    else:
+                        #Comprobamos si la fecha es menor a la de hoy con 5 dias de diferencia o mayor al 1-01-1940 porque son los limites de la API-OPENMETEO
+                        limite_minimo = pd.to_datetime("1940-01-01")
+                        limite_maximo = pd.to_datetime("today") - pd.Timedelta(days=5)
+
+                        if fecha_pd >= limite_minimo and fecha_pd <= limite_maximo:
+                            return True
+                        #Si la fecha se encuentra dentro de los rangos devolvemos True 
+                        else:
+                            print("Nuestros registros llegan desde el 1940-01-01 hasta 5 dias atras, fecha fuera de rango.") 
+                            return False
+                              
+                else: 
+                    print("Longitud de datos incorrecta, el formato es (AAAA-MM-DD) (anio, mes, dia). Intenta otra vez")
+                    return False
+            else: 
+                print("Recuerda utilizar '-' para separar, el formato es (AAAA-MM-DD) (anio, mes, dia) y sin letras. Intenta otra vez")
+                return False
+
+    def fecha_menor(self, fecha1, fecha2):
+        fecha1_pd = pd.to_datetime(fecha1)
+        fecha2_pd = pd.to_datetime(fecha2)
+
+        if fecha1_pd < fecha2_pd:
+            return True 
+        else:
+            return False
+
+
+
+        
+            
+
+  
+        
 
