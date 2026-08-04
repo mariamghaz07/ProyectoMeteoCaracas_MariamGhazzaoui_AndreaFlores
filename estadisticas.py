@@ -48,7 +48,7 @@ def generar_grafica_historica(registro_historico):
 
     plt.xlabel("Fechas")
 
-    plt.ylabel("Temperatura")
+    plt.ylabel("Temperatura (°C)")
 
     plt.show()
 
@@ -58,9 +58,9 @@ def calcular_estadisticas(lista_consulta):
 
     mas_calida = max(lista_consulta, key=lambda c: c.temperatura)
     mas_fria = min(lista_consulta, key=lambda c: c.temperatura)
-    promedio_temp = sum(c.temperatura for c in lista_consulta / len(lista_consulta))
+    promedio_temp = sum(c.temperatura for c in lista_consulta) / len(lista_consulta)
 
-    return { "mas calido": mas_calida, "mas frio": mas_fria, "promedio": promedio_temp}
+    return { "mas_calida": mas_calida, "mas_fria": mas_fria, "promedio": promedio_temp}
 
 
 
