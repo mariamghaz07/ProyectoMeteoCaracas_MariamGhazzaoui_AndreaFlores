@@ -177,6 +177,50 @@ class SistemaMeteo:
         else:
             return False
 
+    def validar_localidad(self, localidad):
+        for mun in self.municipios:
+            for loc in mun.localidades:
+                if localidad.lower().replace(" ", "") == loc.nombre.lower().replace(" ", ""):
+                    l = loc
+                    if loc.tiene_coordenadas():
+                        clima = self.consultar_clima_actual(l)
+                        if clima:
+                            print("\n" + "=" * 40)
+                            print(clima)
+                            print("=" * 40)
+                            return 
+                    else:
+                        print("Esa localidad no tiene coordenadas registradas, disculpe.")
+                        return 
+        print("No se encontro ninguna localidad con ese nombre, intenta de nuevo")
+        return 
+
+    def buscar_nombre(self, cadena):
+        localidades_posibles = []
+        cadena = cadena.lower().replace(" ", "")
+        if len(cadena) == 0:
+            return []
+        for mun in self.municipios:
+                for loc in mun.localidades:   
+                    if len(cadena) > len(loc.nombre.lower().replace(" ", "")):
+                        continue 
+                    nombre = loc.nombre.lower().replace(" ", "")
+                    validado = True
+                    for i in range(len(cadena)):
+                        if cadena[i] !=  nombre[i]:
+                            validado = False
+                            break 
+                    
+                    if validado:
+                        localidades_posibles.append(loc)
+
+        return localidades_posibles
+
+
+
+
+                        
+                    
 
 
         

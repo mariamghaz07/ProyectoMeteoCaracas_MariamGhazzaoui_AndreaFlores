@@ -49,11 +49,40 @@ def main():
                                              print(clima)
                                              print("=" * 40)
                          elif res == 2:
-                              pass #AQUI VA EL SISTEMA DE BUSQUEDA POR NOMBRE
-                                   #mi idea es usar un algoritmo de busqueda 
-
-                    else:
-                         print("Por favor ingresa (1) o (2) para elegir un metodo de busqueda, intenta de nuevo")
+                              print("----INICIANDO SISTEMA DE BUSQUEDA POR NOMBRE----")
+                              cond = (input("Presiona (1) para escribir el nombre de la localidad y (2) para escribir solo una parte")).strip()
+                              if cond == "1":
+                                   loc = input("Ingresa el nombre COMPLETO de la localidad: ")
+                                   sistema.validar_localidad(loc)
+                              elif cond == "2":
+                                   loc = input("Ingresa una parte del nombre de la localidad: ")
+                                   localidades_posibles = sistema.buscar_nombre(loc)
+                                   if not localidades_posibles:
+                                        print("No tenemos registros de localidades con ese nombre, intente de nuevo.")
+                                   else: 
+                                        for i, localidad in enumerate(localidades_posibles):
+                                             print(f"{i +1}- {localidad}")
+                                        des = input("Ingresa la localidad a consultar por su indice: ")
+                                        if des.isdigit() == True:
+                                             des = int(des)
+                                             if des <= 0 or des > len(localidades_posibles):
+                                                  print("Seleccione una localidad dentro del rango")
+                                             else:
+                                                  localidad_final = localidades_posibles[des - 1]
+                                                  if localidad_final.tiene_coordenadas():
+                                                       clima = sistema.consultar_clima_actual(localidad_final)
+                                                       if clima:
+                                                            print("\n" + "=" * 40)
+                                                            print(clima)
+                                                            print("=" * 40)
+                                                  else:
+                                                       print("La localidad que elegiste no tiene coordenadas registradas, elige otra.")
+                                        else: 
+                                             print("Solo puedes escibir numeros en este campo")
+                              else: 
+                                   print("Las opciones validas en este campo son (1) y (2)") 
+                         else:
+                              print("Por favor ingresa (1) o (2) para elegir un metodo de busqueda, intenta de nuevo")
 
                elif opcion == 3:
                     print()

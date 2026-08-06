@@ -69,3 +69,4 @@ class Municipio:
                         return localidades_validas[opcion - 1]
                 else:
                     print("No ingreses letras ni simbolos, por favor.")
+
