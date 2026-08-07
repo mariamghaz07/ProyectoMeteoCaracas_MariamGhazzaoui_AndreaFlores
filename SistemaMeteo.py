@@ -216,16 +216,3 @@ class SistemaMeteo:
 
         return localidades_posibles
 
-
-
-
-                        
-                    
-
-
-        
-            
-
-  
-        
-

@@ -106,20 +106,27 @@ class App:
                                                   if historico:
                                                        print("\n" + "=" * 40)
                                                        print(historico)
+                                                       #El sistema debe mostrar por mes temperatura, humedad, precipitacion, velocidad del viento
+                                                       #Luego valores promedios de cada magnitud
+                                                       historico.desglose_mensual()
 
-                                                       promedio = estadisticas.calcular_promedio_temperatura(historico)
-                                                       print(f"Temperatura promedio del periodo: {round(promedio, 2)}")
 
+                                                       # promedio = estadisticas.calcular_promedio_temperatura(historico)
+                                                       # print(f"Temperatura promedio del periodo: {round(promedio, 2)}")
+
+                                                       #La parte de los anios extremos funciona bien 
                                                        extremos = estadisticas.obtener_extremos_historicos(historico)
                                                        if extremos:
+                                                            print(f"REPORTE ANUAL:")
                                                             print(f"Anio mas caluroso: {extremos['caluroso'][0]} {round(extremos['caluroso'][1], 1)}°C)")
                                                             print(f"Anio mas fresco: {extremos['fresco'][0]} ({round(extremos['fresco'][1], 1 )})°C")
                                                             print(f"Anio mas lluvioso: {extremos['lluvioso'][0]} ({round(extremos['lluvioso'][1], 1)}mm)")
                                                             print(f"Anio mas humedo: {extremos['humedo'][0]} ({round(extremos['humedo'][1], 1)}%)")
                                                        print("=" * 40)
 
-                                                       estadisticas.generar_grafica_historica(historico)
-
+                                                       #la grafica debe mostrar el promedio de cada magnitud y aqui solo muestra temperatura
+                                                       # estadisticas.generar_grafica_historica(historico)
+                                                       break
                                              else:
                                                   print("Las fecha de inicio no puede ser mayor que la fecha de fin, tampoco pueden ser iguales. Intenta otra vez")
                                                   break   
@@ -145,7 +152,7 @@ class App:
 
                                         for i, c in enumerate(self.sistema.consultas, 1):
                                              print(f"{i}. {c.localidad.nombre} - Temp {c.temperatura}")
-                                        resumen = estadisticas.calcular_estadisticas(sistema.consultas)
+                                        resumen = estadisticas.calcular_estadisticas(self.sistema.consultas)
                                         if not resumen:
                                              print("Aun no has realizado alguna consulta")
                                              break
