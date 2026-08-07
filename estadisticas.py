@@ -62,5 +62,16 @@ def calcular_estadisticas(lista_consulta):
 
     return { "mas_calida": mas_calida, "mas_fria": mas_fria, "promedio": promedio_temp}
 
+def mostrar_localidades_sin_coordenadas(lista_municipios):
+    for municipio in lista_municipios:
+        print("----------------------------")
+        print(f"Municipio: {municipio.nombre}")
+        print("----------------------------")
+        for localidad in municipio.localidades: 
+            if localidad.tiene_coordenadas() == False:
+                print(f"{localidad.nombre}")
+
+                
+    
 
 

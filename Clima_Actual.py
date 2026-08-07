@@ -15,8 +15,8 @@ class Clima_Actual:
     def __str__(self):
         estado = self.traducir_codigo_tiempo()
     #Se creo esta variable para poder determinar mejor el tiempo de cada localidad (lluvioso, soleado, despejado, etc..)
-        return (f"{self.localidad.nombre}\n Coordenadas: {self.localidad.latitud}, {self.localidad.longitud}\n Temperatura: {self.temperatura}°C \n Humedad: {self.humedad}% \n Viento: {self.velocidad_viento}km/h \n Estado del tiempo: {estado} ")
     #Aqui se mostraran los datos meteorologicos de cada localidad
+        return (f"Municipio: {self.localidad.municipio}\nLocalidad: {self.localidad.nombre}\nCoordenadas: {self.localidad.latitud}, {self.localidad.longitud}\nTemperatura: {self.temperatura}°C \nHumedad: {self.humedad}% \nViento: {self.velocidad_viento}km/h \nEstado del tiempo: {estado} ")
 
 
 

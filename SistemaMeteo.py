@@ -39,11 +39,11 @@ class SistemaMeteo:
             datos_json = json.load(info)
         """Se le especifica a la lectura del archivo json la codificacion "utf-8" para evitar conflictos
         de lectura con caracteres especiales como acentos u "ñ" """
-        for datos_municipio in datos_json:
-            mun_nuevo = Municipio(datos_municipio)
-            localidades_lista = datos_json[datos_municipio]
+        for municipio in datos_json:
+            mun_nuevo = Municipio(municipio)
+            localidades_lista = datos_json[municipio]
             for loc in localidades_lista:
-                loc_nueva = Localidad(loc["localidad"], loc["latitud"], loc["longitud"])
+                loc_nueva = Localidad(loc["localidad"], municipio, loc["latitud"], loc["longitud"])
                 mun_nuevo.agregar_localidad(loc_nueva)
             self.municipios.append(mun_nuevo)
     
