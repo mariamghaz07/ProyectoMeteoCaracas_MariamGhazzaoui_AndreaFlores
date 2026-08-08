@@ -52,7 +52,7 @@ class App:
                                                   print("=" * 40)
                               elif res == 2:
                                    print("----INICIANDO SISTEMA DE BUSQUEDA POR NOMBRE----")
-                                   cond = (input("Presiona (1) para escribir el nombre de la localidad y (2) para escribir solo una parte")).strip()
+                                   cond = (input("Presiona (1) para escribir el nombre de la localidad y (2) para escribir solo una parte: ")).strip()
                                    if cond == "1":
                                         loc = input("Ingresa el nombre COMPLETO de la localidad: ")
                                         self.sistema.validar_localidad(loc)
@@ -151,14 +151,14 @@ class App:
                                         print(f"Total de consultas realizadas hasta ahora: {len(self.sistema.consultas)} ")
 
                                         for i, c in enumerate(self.sistema.consultas, 1):
-                                             print(f"{i}. {c.localidad.nombre} - Temp {c.temperatura}")
+                                             print(f"{i}. {c.localidad.nombre} ({c.localidad.municipio})- Temp {c.temperatura}")
                                         resumen = estadisticas.calcular_estadisticas(self.sistema.consultas)
                                         if not resumen:
                                              print("Aun no has realizado alguna consulta")
                                              break
                                         else:
-                                             print(f"Localidad mas calida: {resumen['mas_calida'].localidad.nombre} ({resumen['mas_calida'].temperatura}°C)")
-                                             print(f"Localidad mas fria: {resumen['mas_fria'].localidad.nombre} ({resumen['mas_fria'].temperatura}°C)")
+                                             print(f"Localidad mas calida: {resumen['mas_calida'].localidad.nombre} (Municipio {resumen['mas_calida'].localidad.municipio}): ({resumen['mas_calida'].temperatura}°C)")
+                                             print(f"Localidad mas fria: {resumen['mas_fria'].localidad.nombre} (Municipio {resumen['mas_fria'].localidad.municipio}): ({resumen['mas_fria'].temperatura}°C)")
                                              print(f"Promedio de la consulta: {round(resumen['promedio'], 2)}°C")
                                              break
                               else:
