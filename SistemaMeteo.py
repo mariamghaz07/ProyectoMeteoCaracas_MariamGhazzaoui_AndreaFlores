@@ -4,7 +4,7 @@ from Clima_Actual import Clima_Actual
 from RegistroHistorico import RegistroHistorico
 
 import json
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt 
 import requests
 import estadisticas
 
@@ -17,6 +17,7 @@ class SistemaMeteo:
         self.ruta_json = la_ruta_json
         self.municipios = []
         self.consultas = []
+
 
         self.cargar_datos()
 
