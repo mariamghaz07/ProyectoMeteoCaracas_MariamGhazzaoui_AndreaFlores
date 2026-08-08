@@ -1,4 +1,4 @@
-
+import matplotlib.pyplot as plt
 
 class RegistroHistorico:
     def __init__ (self, la_localidad, las_fechas, las_temperaturas, las_humedades, las_precipitaciones, los_vientos):
@@ -65,6 +65,71 @@ class RegistroHistorico:
         print(f"Promedio de precipitacion acumulada: {round(sum(self.precipitaciones)/len(meses), 2)}mm")
         print(f"Promedio de vientos: {round(sum(self.vientos)/len(self.fechas), 2)}km/hr")
         print()
+
+    def generar_grafica_historica(self):
+        #vamos a agrupar los datos por anio
+        anios = []
+        temperaturas_xanio = []
+        humedades_xanio = []
+        precipitaciones_xanio = []
+        vientos_xanio = []
+        for fecha in self.fechas:
+            anio = fecha[:4]
+            if anio in anios:
+                continue
+            else:
+                anios.append(anio)
+
+        for anio in anios:
+            temperaturas = []
+            humedades = []
+            precipitaciones = []
+            vientos = []
+            for i in range(len(self.fechas)):
+                if anio in self.fechas[i]:
+                    temperaturas.append(self.temperaturas[i])
+                    humedades.append(self.humedades[i])
+                    precipitaciones.append(self.precipitaciones[i])
+                    vientos.append(self.vientos[i])
+            #calculamos cada promedio y las agregamos a una lista para poder graficarlas
+            if len(temperaturas) != 0:
+                promedio_temp = round(sum(temperaturas)/len(temperaturas), 2)
+                temperaturas_xanio.append(promedio_temp)
+            if len(humedades) != 0:
+                promedio_humedades = round(sum(humedades)/len(humedades), 2)
+                humedades_xanio.append(promedio_humedades)
+            if len(precipitaciones) != 0:
+                promedio_precipitaciones = round(sum(precipitaciones), 2)
+                precipitaciones_xanio.append(promedio_precipitaciones)
+            if len(vientos) != 0:
+                promedio_vientos = round(sum(vientos)/len(vientos), 2)
+                vientos_xanio.append(promedio_vientos)
+        #generamos la grafica usando matplotlib
+        #Asignamos cada yn a una lista de promedios de la magnitud especifica
+        x1 = anios
+        y1 = temperaturas_xanio
+
+        y2 = humedades_xanio
+
+        y3 = precipitaciones_xanio
+
+        y4 = vientos_xanio
+
+        fig, ax = plt.subplots()
+        
+        plt.plot(x1 , y1, marker = "o", color = "red", label = "Temperatura Anual (°C)" )
+        plt.plot(x1 , y2, marker = "o", color = "blue", label = "Humedad Relativa Anual (%)" )
+        plt.plot(x1 , y3, marker = "o", color = "green", label = "Precipitacion Anual (mm)")
+        plt.plot(x1 , y4, marker = "o", color = "orange", label = "Velocidad del viento anual (km/hr)")
+
+        plt.title(f"Evolucion del Clima - {self.localidad.nombre}")
+
+        plt.xlabel("Anios consultados")
+        plt.legend()
+        #se aplica escala logaritmica en y para que se puedan apreciar las magnitudes diferentes a la precipitacion, ya que sus valores eran muy grandes en comparacion
+        plt.yscale('log')
+
+        plt.show()
         
  
 

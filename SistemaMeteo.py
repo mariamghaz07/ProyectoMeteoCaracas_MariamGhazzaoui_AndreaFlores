@@ -4,9 +4,7 @@ from Clima_Actual import Clima_Actual
 from RegistroHistorico import RegistroHistorico
 
 import json
-import matplotlib.pyplot as plt
 import requests
-import estadisticas
 import pandas as pd
 
 URL_REAL = "https://api.open-meteo.com/v1/forecast" #API para datos en tiempo real
@@ -24,10 +22,6 @@ class SistemaMeteo:
 
     def __str__(self):
         return f"Sistema MeteoCaracas: {len(self.municipios)} municipios"
-
-    def agregar_municipio (self, el_municipio):
-        self.municipios.append(el_municipio)
-        
 
     def guardar_consulta(self, la_consulta_clima):
         self.consultas.append(la_consulta_clima)

@@ -1,14 +1,10 @@
 from SistemaMeteo import SistemaMeteo
-from Municipio import Municipio
-from Localidad import Localidad
-from Clima_Actual import Clima_Actual
-from RegistroHistorico import RegistroHistorico
-import estadisticas
+from Estadisticas import Estadisticas
 
 class App:     
      def __init__(self):
           self.sistema = SistemaMeteo("zonas_caracas.json")
-
+          self.estadisticas = Estadisticas()
      def menu(self):
 
           while True:
@@ -115,7 +111,7 @@ class App:
                                                        # print(f"Temperatura promedio del periodo: {round(promedio, 2)}")
 
                                                        #La parte de los anios extremos funciona bien 
-                                                       extremos = estadisticas.obtener_extremos_historicos(historico)
+                                                       extremos = self.estadisticas.obtener_extremos_historicos(historico)
                                                        if extremos:
                                                             print(f"REPORTE ANUAL:")
                                                             print(f"Anio mas caluroso: {extremos['caluroso'][0]} {round(extremos['caluroso'][1], 1)}°C)")
@@ -125,7 +121,7 @@ class App:
                                                        print("=" * 40)
 
                                                        #la grafica debe mostrar el promedio de cada magnitud y aqui solo muestra temperatura
-                                                       # estadisticas.generar_grafica_historica(historico)
+                                                       historico.generar_grafica_historica()
                                                        break
                                              else:
                                                   print("Las fecha de inicio no puede ser mayor que la fecha de fin, tampoco pueden ser iguales. Intenta otra vez")
@@ -140,7 +136,7 @@ class App:
                               opcion = input("1- Ranking y promedio general de temperatura\n2- Mostrar localidades sin coordenadas")
                               if opcion == "2":
                                         print("--------------MOSTRANDO LOCALIDADES SIN COORDENADAS----------------")
-                                        estadisticas.mostrar_localidades_sin_coordenadas(self.sistema.municipios)
+                                        self.estadisticas.mostrar_localidades_sin_coordenadas(self.sistema.municipios)
                                         break
                               
                               elif opcion == "1":
@@ -152,7 +148,7 @@ class App:
 
                                         for i, c in enumerate(self.sistema.consultas, 1):
                                              print(f"{i}. {c.localidad.nombre} ({c.localidad.municipio})- Temp {c.temperatura}")
-                                        resumen = estadisticas.calcular_estadisticas(self.sistema.consultas)
+                                        resumen = self.estadisticas.calcular_estadisticas(self.sistema.consultas)
                                         if not resumen:
                                              print("Aun no has realizado alguna consulta")
                                              break
