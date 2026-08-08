@@ -1,14 +1,15 @@
 
 class Localidad:
     #Creamos la primera clase que es la localidad, en donde se mostrara el area geografica del area metropolitano
-    def __init__(self, el_nombre, la_latitud=None, la_longitud=None):
+    def __init__(self, el_nombre, el_municipio, la_latitud=None, la_longitud=None):
         self.nombre = el_nombre
+        self.municipio = el_municipio
         self.latitud = la_latitud
         self.longitud = la_longitud
     #Se le pone las atribuciones correspondiente y se clasifican cada una, con su nombre y sus coordenada geograficas
     #Como hay algunas que no tienen latitud ni longitud se clasifica como "None"
     def __str__(self):
-        return f"Localidad: {self.nombre}, Latitud: {self.latitud}, Longitud: {self.longitud}"
+        return f"Municipio: {self.municipio}, Localidad: {self.nombre}, Latitud: {self.latitud}, Longitud: {self.longitud}"
     #Aqui se mostrata en pantalla toda la informacion de la localidad
     def tiene_coordenadas(self):
         return self.latitud is not None and self.longitud is not None 

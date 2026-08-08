@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from SistemaMeteo import SistemaMeteo
 from Municipio import Municipio
 from Localidad import Localidad
@@ -107,3 +108,14 @@ def main():
 
 if __name__ == "__main__":
     main()
+=======
+from App import App
+
+def main():
+    app = App()
+    app.menu()
+
+
+if __name__ == "__main__":
+     main()
+>>>>>>> 574317514825706909fd9f267460a9d3487cf4be
