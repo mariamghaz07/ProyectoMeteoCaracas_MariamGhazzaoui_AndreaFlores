@@ -1,5 +1,8 @@
-from App import ejecutar_app
+from App import App
+
+def main():
+    app = App()
+    app.menu()
 
 if __name__ == "__main__":
-    ejecutar_app()
-
+     main()

@@ -1,113 +1,83 @@
 from SistemaMeteo import SistemaMeteo
-from Municipio import Municipio
-from Localidad import Localidad
-from Clima_Actual import Clima_Actual
-from RegistroHistorico import RegistroHistorico
-from Validaciones import pedir_opcion_menu, pedir_fecha_valida
-import estadisticas
+from Estadisticas import Estadisticas
+import Validaciones
 
+class App:     
+    def __init__(self):
+        self.sistema = SistemaMeteo("zonas_caracas.json")
+        self.estadisticas = Estadisticas()
 
-# =====================================================================================
-# Funcion principal de la aplicacion.
-# Las validaciones de datos se gestionan externamente mediante el modulo Validaciones.py.
-# Al solicitar opciones del menu o fechas, el sistema valida que las entradas sean correctas
-# (numeros entre 1 y 5, o fechas con formato AAAA-MM-DD). Si el usuario ingresa letras,
-# simbolos o valores fuera de rango, el programa muestra un mensaje de advertencia y solicita
-# la opcion correcta sin detener su ejecucion.
-# =====================================================================================
-def ejecutar_app():
-    try:
-        sistema = SistemaMeteo("zonas_caracas.json")
-    except Exception as e:
-        print(f"Error al cargar el archivo de datos: {e}")
-        return
+    def menu(self):
+        while True:
+            print("""
+----Sistema Meteorologico de Caracas----
+1. Ver reporte inicial (Carga de datos)
+2. Consultar clima en tiempo real
+3. Consultar registro historico y datos
+4. Ver las estadisticas de la consulta
+5. Salir del programa
+""")
 
-    while True:
-        print(
-            "\n----Sistema Meteorologico de Caracas----\n"
-            "1. Ver reporte inicial (Carga de datos)\n"
-            "2. Consultar clima en tiempo real\n"
-            "3. Consultar registro historico y datos\n"
-            "4. Ver las estadisticas de la consulta\n"
-            "5. Salir del programa"
-        )
+            opcion = Validaciones.pedir_opcion_menu("Seleccione la opcion de su preferencia: ", 1, 5)
 
-        opcion = pedir_opcion_menu("Seleccione la opcion de su preferencia: ", 1, 5)
+            if opcion == 1:
+                print("----Reporte inicial de cobertura----")
+                self.sistema.reporte_inicial_total()
 
-        if opcion == 1:
-            print("\n----Reporte inicial de cobertura----")
-            sistema.reporte_inicial_total()
+            elif opcion == 2:
+                res = Validaciones.pedir_opcion_menu("\n----Consulta en tiempo real----\nPresiona (1) para buscar por lista o (2) para buscar por nombre: ", 1, 2)
 
-        elif opcion == 2:
-            print("\n----Consulta en tiempo real----")
-            municipio = sistema.seleccionar_municipio()
-            if municipio:
-                localidad = municipio.seleccionar_localidad()
+                localidad = None
+                if res == 1:
+                    print("----Lista de Municipios----")
+                    municipio = self.sistema.seleccionar_municipio()
+                    if municipio:
+                        localidad = municipio.seleccionar_localidad()
+                else:
+                    localidad = Validaciones.pedir_localidad_por_nombre(self.sistema)
+
                 if localidad:
-                    try:
-                        clima = sistema.consultar_clima_actual(localidad)
-                        if clima:
-                            separador = "=" * 40
-                            print(f"\n{separador}\n{clima}\n{separador}")
-                    except Exception as e:
-                        print(f"\nOcurrio un error al consultar el clima en tiempo real: {e}")
+                    clima = self.sistema.consultar_clima_actual(localidad)
+                    if clima:
+                        print(f"\n{'=' * 40}\n{clima}\n{'=' * 40}")
 
-        elif opcion == 3:
-            print("\n----Consulta de datos historicos----")
-            municipio = sistema.seleccionar_municipio()
-            if municipio:
-                localidad = municipio.seleccionar_localidad()
-                if localidad:
-                    inicio = pedir_fecha_valida("Ingrese fecha de inicio (AAAA-MM-DD): ")
-                    fin = pedir_fecha_valida("Ingrese fecha de fin (AAAA-MM-DD): ")
+            elif opcion == 3:
+                print("\n----Consulta de datos historicos----")
+                municipio = self.sistema.seleccionar_municipio()
+                if municipio:
+                    localidad = municipio.seleccionar_localidad()
+                    if localidad:
+                        print("INSTRUCCIONES: La fecha de inicio no puede ser mayor a la de fin, no se admiten fechas menores a 1940-01-01 o superiores a cinco dias atras. Siga el formato correctamente.")
+                        inicio, fin = Validaciones.pedir_rango_fechas()
 
-                    try:
-                        historico = sistema.consultar_clima_historico(localidad, inicio, fin)
+                        historico = self.sistema.consultar_clima_historico(localidad, inicio, fin)
                         if historico:
-                            separador = "=" * 40
-                            promedio = estadisticas.calcular_promedio_temperatura(historico)
-                            extremos = estadisticas.obtener_extremos_historicos(historico)
+                            print("\n" + "=" * 40)
+                            print(historico)
+                            historico.desglose_mensual()
 
-                            mensaje_extremos = ""
+                            extremos = self.estadisticas.obtener_extremos_historicos(historico)
                             if extremos:
-                                mensaje_extremos = (
+                                print(
+                                    f"REPORTE ANUAL:\n"
                                     f"Anio mas caluroso: {extremos['caluroso'][0]} ({round(extremos['caluroso'][1], 1)}°C)\n"
                                     f"Anio mas fresco: {extremos['fresco'][0]} ({round(extremos['fresco'][1], 1)}°C)\n"
                                     f"Anio mas lluvioso: {extremos['lluvioso'][0]} ({round(extremos['lluvioso'][1], 1)}mm)\n"
-                                    f"Anio mas humedo: {extremos['humedo'][0]} ({round(extremos['humedo'][1], 1)}%)\n"
+                                    f"Anio mas humedo: {extremos['humedo'][0]} ({round(extremos['humedo'][1], 1)}%)"
                                 )
+                            print("=" * 40)
+                            historico.generar_grafica_historica()
 
-                            print(
-                                f"\n{separador}\n"
-                                f"{historico}\n"
-                                f"Temperatura promedio del periodo: {round(promedio, 2)}°C\n"
-                                f"{mensaje_extremos}"
-                                f"{separador}"
-                            )
+            elif opcion == 4:
+                opcion_est = Validaciones.pedir_opcion_menu("\n----Ver estadisticas de la consulta----\n1- Ranking y promedio general de temperatura\n2- Mostrar localidades sin coordenadas\nSeleccione una opcion: ", 1, 2)
+                
+                if opcion_est == 2:
+                    print("--------------MOSTRANDO LOCALIDADES SIN COORDENADAS----------------")
+                    self.estadisticas.mostrar_localidades_sin_coordenadas(self.sistema.municipios)
 
-                            estadisticas.generar_grafica_historica(historico)
-                    except Exception as e:
-                        print(f"\nOcurrio un error al obtener la informacion historica: {e}")
+                elif opcion_est == 1:
+                    Validaciones.validar_y_mostrar_estadisticas_consultas(self.sistema.consultas, self.estadisticas)
 
-        elif opcion == 4:
-            print("\n----Ver estadisticas de la consulta----")
-            if len(sistema.consultas) == 0:
-                print("Aun no has realizado ninguna consulta en tiempo real.")
-            else:
-                print(f"Total de consultas realizadas hasta ahora: {len(sistema.consultas)}")
-
-                for i, c in enumerate(sistema.consultas, 1):
-                    print(f"{i}. {c.localidad.nombre} - Temp: {c.temperatura}°C")
-
-                resumen = estadisticas.calcular_estadisticas(sistema.consultas)
-                if resumen:
-                    print(
-                        f"\n--- Resumen General ---\n"
-                        f"Localidad mas calida: {resumen['mas_calida'].localidad.nombre} ({resumen['mas_calida'].temperatura}°C)\n"
-                        f"Localidad mas fria: {resumen['mas_fria'].localidad.nombre} ({resumen['mas_fria'].temperatura}°C)\n"
-                        f"Promedio de la consulta: {round(resumen['promedio'], 2)}°C"
-                    )
-
-        elif opcion == 5:
-            print("\nGracias por usar el sistema meteorologico de Caracas!")
-            break
+            elif opcion == 5:
+                print("Gracias por usar el sistema metereologico de Caracas!")
+                break
