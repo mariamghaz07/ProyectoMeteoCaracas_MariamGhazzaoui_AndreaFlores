@@ -52,19 +52,8 @@ class RegistroHistorico:
                 viento_mensual = round(sum(vientos)/len(vientos), 2)
 
             #imprimimos cada una en pantalla
-            print()
-            print(f"Temperatura: {temp_mensual}°C.")
-            print(f"Humedad relativa: {humedad_mensual}%")
-            print(f"Precipitacion acumulada: {precipitacion_mensual}mm")
-            print(f"Velocidad del viento: {viento_mensual}km/hr")
-            print("--------------------------------------------------------------------------")
-        print(f"VALORES PROMEDIO DE CADA MAGNITUD: ")
-        print()
-        print(f"Promedio de temperatura: {round(sum(self.temperaturas)/len(self.fechas), 2)}°C")
-        print(f"Promedio de humedad relativa: {round(sum(self.humedades)/len(self.fechas), 2)}%")
-        print(f"Promedio de precipitacion acumulada: {round(sum(self.precipitaciones)/len(meses), 2)}mm")
-        print(f"Promedio de vientos: {round(sum(self.vientos)/len(self.fechas), 2)}km/hr")
-        print()
+            print(f"\nTemperatura: {temp_mensual}°C.\nHumedad relativa: {humedad_mensual}%\nPrecipitacion acumulada: {precipitacion_mensual}mm\nVelocidad del viento: {viento_mensual}km/hr\n--------------------------------------------------------------------------")
+        print(f"VALORES PROMEDIO DE CADA MAGNITUD:\n\nPromedio de temperatura: {round(sum(self.temperaturas)/len(self.fechas), 2)}°C\nPromedio de humedad relativa: {round(sum(self.humedades)/len(self.fechas), 2)}%\nPromedio de precipitacion acumulada: {round(sum(self.precipitaciones)/len(meses), 2)}mm\nPromedio de vientos: {round(sum(self.vientos)/len(self.fechas), 2)}km/hr\n")
 
     def generar_grafica_historica(self):
         #vamos a agrupar los datos por anio

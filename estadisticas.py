@@ -1,9 +1,29 @@
 
 class Estadisticas:
+    """
+    Clase para calcular las estadisticas y promedios del clima,
+    tanto del registro historico como de las consultas hechas.
+    """
+
     def __init__(self):
+        """
+        Constructor de la clase Estadisticas.
+        """
         pass
 
     def obtener_extremos_historicos(self, registro_historico):
+        """
+        Busca los años mas caluroso, mas fresco, mas lluvioso y mas humedo 
+        analizando los datos historicos por año.
+
+        Parametros:
+        - registro_historico: Objeto que contiene las listas de fechas, temperaturas, 
+          precipitaciones y humedades.
+
+        Retorna:
+        - Un diccionario con los años extremos y sus valores, o None si no hay fechas.
+        """
+
         if not registro_historico.fechas:
             return None
 
@@ -36,6 +56,17 @@ class Estadisticas:
 
 
     def calcular_estadisticas(self, lista_consulta):
+        """
+        Calcula la localidad mas calida, la mas fria y el promedio de temperatura 
+        de las consultas realizadas en tiempo real.
+
+        Parametros:
+        - lista_consulta: Lista de objetos con las consultas hechas por el usuario.
+
+        Retorna:
+        - Un diccionario con la consulta mas calida, la mas fria y el promedio de temperatura,
+          o None si la lista esta vacia.
+        """
         if not lista_consulta:
             return None
 
@@ -46,10 +77,16 @@ class Estadisticas:
         return { "mas_calida": mas_calida, "mas_fria": mas_fria, "promedio": promedio_temp}
 
     def mostrar_localidades_sin_coordenadas(self, lista_municipios):
+        """
+        Recorre la lista de municipios e imprime en pantalla las localidades 
+        que no tienen coordenadas registradas.
+
+        Parametros:
+        - lista_municipios: Lista de objetos Municipio a revisar.
+        """
+        
         for municipio in lista_municipios:
-            print("----------------------------")
-            print(f"Municipio: {municipio.nombre}")
-            print("----------------------------")
+            print(f"----------------------------\nMunicipio: {municipio.nombre}\n----------------------------")
             for localidad in municipio.localidades: 
                 if localidad.tiene_coordenadas() == False:
                     print(f"{localidad.nombre}")
