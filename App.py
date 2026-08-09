@@ -1,13 +1,21 @@
 from SistemaMeteo import SistemaMeteo
 from Estadisticas import Estadisticas
-import Validaciones
+from Validaciones import Validaciones
 
-class App:     
+class App:  
+    """Clase auxiliar que controla el flujo del programa y la interfaz de usuario
+    Administra las funciones del menu y la interaccion con el usuario en consola"""   
     def __init__(self):
+        """Inicia la aplicacion creando un objeto de tipo SistemaMeteo, uno de tipo validaciones y otro de tipo Estadisticas"""
         self.sistema = SistemaMeteo("zonas_caracas.json")
         self.estadisticas = Estadisticas()
+        self.validaciones = Validaciones()
+
+
 
     def menu(self):
+        """Genera el menu que permite que el usuario interactue con el sistema, pide las opciones al usuario y muestra la informacion
+        obtenida"""
         while True:
             print("""
 ----Sistema Meteorologico de Caracas----
@@ -18,14 +26,14 @@ class App:
 5. Salir del programa
 """)
 
-            opcion = Validaciones.pedir_opcion_menu("Seleccione la opcion de su preferencia: ", 1, 5)
+            opcion = self.validaciones.pedir_opcion_menu("Seleccione la opcion de su preferencia: ", 1, 5)
 
             if opcion == 1:
                 print("----Reporte inicial de cobertura----")
                 self.sistema.reporte_inicial_total()
 
             elif opcion == 2:
-                res = Validaciones.pedir_opcion_menu("\n----Consulta en tiempo real----\nPresiona (1) para buscar por lista o (2) para buscar por nombre: ", 1, 2)
+                res = self.validaciones.pedir_opcion_menu("\n----Consulta en tiempo real----\nPresiona (1) para buscar por lista o (2) para buscar por nombre: ", 1, 2)
 
                 localidad = None
                 if res == 1:
@@ -34,7 +42,7 @@ class App:
                     if municipio:
                         localidad = municipio.seleccionar_localidad()
                 else:
-                    localidad = Validaciones.pedir_localidad_por_nombre(self.sistema)
+                    localidad = self.validaciones.pedir_localidad_por_nombre(self.sistema)
 
                 if localidad:
                     clima = self.sistema.consultar_clima_actual(localidad)
@@ -48,7 +56,7 @@ class App:
                     localidad = municipio.seleccionar_localidad()
                     if localidad:
                         print("INSTRUCCIONES: La fecha de inicio no puede ser mayor a la de fin, no se admiten fechas menores a 1940-01-01 o superiores a cinco dias atras. Siga el formato correctamente.")
-                        inicio, fin = Validaciones.pedir_rango_fechas()
+                        inicio, fin = self.validaciones.pedir_rango_fechas()
 
                         historico = self.sistema.consultar_clima_historico(localidad, inicio, fin)
                         if historico:
@@ -69,14 +77,14 @@ class App:
                             historico.generar_grafica_historica()
 
             elif opcion == 4:
-                opcion_est = Validaciones.pedir_opcion_menu("\n----Ver estadisticas de la consulta----\n1- Ranking y promedio general de temperatura\n2- Mostrar localidades sin coordenadas\nSeleccione una opcion: ", 1, 2)
+                opcion_est = self.validaciones.pedir_opcion_menu("\n----Ver estadisticas de la consulta----\n1- Ranking y promedio general de temperatura\n2- Mostrar localidades sin coordenadas\nSeleccione una opcion: ", 1, 2)
                 
                 if opcion_est == 2:
                     print("--------------MOSTRANDO LOCALIDADES SIN COORDENADAS----------------")
                     self.estadisticas.mostrar_localidades_sin_coordenadas(self.sistema.municipios)
 
                 elif opcion_est == 1:
-                    Validaciones.validar_y_mostrar_estadisticas_consultas(self.sistema.consultas, self.estadisticas)
+                    self.validaciones.validar_y_mostrar_estadisticas_consultas(self.sistema.consultas, self.estadisticas)
 
             elif opcion == 5:
                 print("Gracias por usar el sistema metereologico de Caracas!")

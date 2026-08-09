@@ -1,7 +1,25 @@
 import matplotlib.pyplot as plt
 
 class RegistroHistorico:
+    """
+    Clase que representa el reporte del clima historico de una localidad.
+
+    Permite agrupar los datos de temperatura, humedad, precipitacion acumulada y viento por mes, calcular sus valores
+    promedio y generar una grafica con su evolucion anual.
+    """
     def __init__ (self, la_localidad, las_fechas, las_temperaturas, las_humedades, las_precipitaciones, los_vientos):
+        """
+        Guarda los datos del clima historico recibidos para la localidad.
+
+        Parametros:
+        - la_localidad (Localidad): Objeto con la informacion de la localidad.
+        - las_fechas (list): Lista de cadenas con las fechas en formato AAAA-MM-DD.
+        - las_temperaturas (list): Lista de temperaturas registradas en grados Celsius (°C).
+        - las_humedades (list): Lista de porcentajes de humedad relativa registrados (%).
+        - las_precipitaciones (list): Lista de precipitacion acumulada registrados (%).
+        - los_vientos (list): Lista de velocidades de viento registrados (%).
+
+        """
         self.localidad = la_localidad
         self.fechas = las_fechas
         self.temperaturas = las_temperaturas
@@ -9,10 +27,15 @@ class RegistroHistorico:
         self.precipitaciones = las_precipitaciones
         self.vientos = los_vientos
     def __str__(self):
+        """Genera un texto informativo con el nombre de la localidad y los registros guardados
+        Retorna:
+        - str: Cadena formateada con la localidad y la cantidad de registros."""
         return f"Historico de {self.localidad.nombre} ({len(self.fechas)} registros diarios guardados)"
     
     def desglose_mensual(self):
-        """esta funcion debe agrupar los datos del registro historico en forma mensual e imprimir los datos por mes y los valores promedio"""
+        """Agrupa los datos diarios de manera mensual e imprime la informacion detalladamente
+        Calcula la temperatura, humedad, precipitacion acumulada y velocidad de viento promedios para cada mes, 
+        finaliza con los promedios generales de la consulta"""
         #Generamos una lista de los meses que estan presentes en la consulta
         if not self.fechas:
             print("No tenemos los registros")
@@ -56,6 +79,9 @@ class RegistroHistorico:
         print(f"VALORES PROMEDIO DE CADA MAGNITUD:\n\nPromedio de temperatura: {round(sum(self.temperaturas)/len(self.fechas), 2)}°C\nPromedio de humedad relativa: {round(sum(self.humedades)/len(self.fechas), 2)}%\nPromedio de precipitacion acumulada: {round(sum(self.precipitaciones)/len(meses), 2)}mm\nPromedio de vientos: {round(sum(self.vientos)/len(self.fechas), 2)}km/hr\n")
 
     def generar_grafica_historica(self):
+        """Genera y muestra una grafica de lineas multivariable que representa cada magnitud climatica.
+        Calcula los promedios anuales y dibuja las variables en pantalla utilizando una escala logaritmica 
+        para mantener la legibilidad de los datos"""
         #vamos a agrupar los datos por anio
         anios = []
         temperaturas_xanio = []
